@@ -9,8 +9,17 @@ export default defineNuxtConfig({
     },
     srcDir: 'src/',
     devtools: { enabled: true },
+    ionic: {
+        integrations: {
+            
+        },
+        css: {
+          utilities: true,
+        },
+        config: {
+            
+        }
+    },
     modules: ['@nuxtjs/ionic', '@pinia/nuxt'],
-    ssr: false,
-    
+    ssr: false
 });
-
