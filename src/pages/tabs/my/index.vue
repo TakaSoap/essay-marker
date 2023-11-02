@@ -5,6 +5,11 @@
                 <ion-title>Tab 3</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content> Tab 3 content </ion-content>
+        <ion-content class="ion-padding">
+            <ion-button router-link="/">
+                <ion-icon :icon="ioniconsLogOutOutline" />
+                <ion-label>Logout</ion-label>
+            </ion-button>
+        </ion-content>
     </ion-page>
 </template>
