@@ -10,7 +10,7 @@
                         <ion-label>List</ion-label>
                     </ion-tab-button>
 
-                    <ion-tab-button tab="add" href="/tabs/add">
+                    <ion-tab-button tab="marking" href="/tabs/marking">
                         <ion-icon :icon="ioniconsPencilOutline" />
                         <ion-label>Marking</ion-label>
                     </ion-tab-button>

@@ -3,62 +3,84 @@
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
-                    <ion-back-button defaultHref="/"></ion-back-button>
+                    <ion-back-button defaultHref="/tabs"></ion-back-button>
                 </ion-buttons>
                 <ion-title>Edit Requirement</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-            <div class="ion-margin-bottom">
-                <ion-select placeholder="Select Requirement" v-model="selectedRequirement" @ionChange="updateRequirement">
-                    <ion-select-option v-for="req in requirements" :key="req.title" :value="req">
-                        {{ req.title }}
-                    </ion-select-option>
-                </ion-select>
-            </div>
-            <ion-label>
-                {{ selectedRequirement ? selectedRequirement.title : 'No requirement selected' }}
-            </ion-label>
-            <ion-textarea
-                :placeholder="selectedRequirement ? 'Edit requirement content here...' : 'Please select a requirement'"
-                v-model="currentRequirementContent"
-            />
+            <n-form>
+                <n-form-item-row label="Saved Requirements">
+                    <n-select v-model:value="selectedRequirementTitle" :options="options" @update:value="handleUpdateSelect"> </n-select>
+                </n-form-item-row>
+                <n-form-item-row label="Content">
+                    <n-space vertical style="width: 100%">
+                    <n-input
+                        type="textarea"
+                        v-model:value="newEssayStore.requirementContent"
+                        :autosize="{
+                            minRows: 3,
+                            maxRows: 20
+                        }"
+                    />
+                    <n-text depth="3" italic>Edits to the content are valid for this time only and do not affect saved requirements.</n-text>
+                    </n-space>
+                </n-form-item-row>
+            </n-form>
         </ion-content>
         <ion-footer>
-            <ion-toolbar>
-                <ion-row>
-                    <ion-col>
-                        <ion-button color="danger" expand="full" @click="goBack">Cancel</ion-button>
-                    </ion-col>
-                    <ion-col>
-                        <ion-button expand="full">Submit</ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-toolbar>
+            <n-card content-style="padding: 1em" :bordered="false" embedded>
+                <n-button block type="info" @click="goBack">
+                    <template #icon>
+                        <n-icon><Checkmark16Regular /></n-icon>
+                    </template>
+                    Confirm
+                </n-button>
+            </n-card>
         </ion-footer>
     </ion-page>
 </template>
 
 <script setup lang="ts">
-const router = useRouter();
+import { Checkmark16Regular } from '@vicons/fluent';
 
-const goBack = () => {
-    router.back();
-};
+interface SelectBaseOption {
+    label: string;
+    value: string;
+}
+
+const router = useRouter();
+const newEssayStore = useNewEssayStore();
 
 const requirements = ref([
+    { title: 'Auto', content: 'Auto' },
     { title: 'Requirement 1', content: 'Content 1' },
     { title: 'Requirement 2', content: 'Content 2' }
     // ...
 ]);
 
-const selectedRequirement = ref(null);
-const currentRequirementContent = ref('');
+const options = ref(
+    requirements.value.map((requirement) => {
+        return {
+            label: requirement.title,
+            value: requirement.content
+        };
+    })
+);
 
-const updateRequirement = (event) => {
-    selectedRequirement.value = event.detail.value;
-    currentRequirementContent.value = selectedRequirement.value ? selectedRequirement.value.content : '';
-};
+function handleUpdateSelect(value: string, option: SelectBaseOption) {
+    newEssayStore.requirementTitle = option.label;
+    newEssayStore.requirementContent = option.value;
+    console.log(option);
+}
+
+function goBack() {
+    router.back();
+}
+
+const selectedRequirementTitle = computed(() => {
+    return newEssayStore.requirementTitle;
+});
 </script>
 
 <style scoped>

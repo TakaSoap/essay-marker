@@ -8,7 +8,7 @@
             </div>
         </ion-header>
         <ion-content>
-            <div class="welcome-banner" ref="welcomeBanner" style="background-color: aqua">
+            <div class="welcome-banner" ref="welcomeBanner">
                 <h1 style="text-align: center; margin: 10rem 0 10rem 0">Welcome to Essay Marker</h1>
 
                 <ion-button router-link="/tabs/list" expand="block" shape="round" class="welcome-button">
