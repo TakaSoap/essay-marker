@@ -10,7 +10,7 @@
                 <n-message-provider>
                     <n-notification-provider>
                         <n-dialog-provider>
-                            <ion-router-outlet />
+                                <ion-router-outlet />
                         </n-dialog-provider>
                     </n-notification-provider>
                 </n-message-provider>
@@ -24,21 +24,18 @@ import { useThemeStore } from '@/stores/theme';
 import '@/theme/variables.css';
 
 const themeStore = useThemeStore();
+const spinStore = useSpinStore();
 
 /**
  * @type import('naive-ui').GlobalThemeOverrides
  */
- const lightThemeOverrides = {
-    Layout: {
-
-    }
+const lightThemeOverrides = {
+    Layout: {}
     // ...
 };
 
 const darkThemeOverrides = {
-    Layout: {
-
-    }
+    Layout: {}
     // ...
 };
 

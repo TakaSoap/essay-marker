@@ -4,6 +4,8 @@ export const useNewEssayStore = defineStore('newEssay', () => {
     const title = ref('');
     const content = ref('');
 
+    const ieltsTopic = ref('');
+
     const requirementTitle = ref('');
     const requirementContent = ref('');
 
@@ -22,6 +24,7 @@ export const useNewEssayStore = defineStore('newEssay', () => {
     return {
         title,
         content,
+        ieltsTopic,
         requirementTitle,
         requirementContent,
         studentId,

@@ -15,15 +15,15 @@
                 </n-form-item-row>
                 <n-form-item-row label="Content">
                     <n-space vertical style="width: 100%">
-                    <n-input
-                        type="textarea"
-                        v-model:value="newEssayStore.requirementContent"
-                        :autosize="{
-                            minRows: 3,
-                            maxRows: 20
-                        }"
-                    />
-                    <n-text depth="3" italic>Edits to the content are valid for this time only and do not affect saved requirements.</n-text>
+                        <n-input
+                            type="textarea"
+                            v-model:value="newEssayStore.requirementContent"
+                            :autosize="{
+                                minRows: 3,
+                                maxRows: 20
+                            }"
+                        />
+                        <n-text depth="3" italic>Edits to the content are valid for this time only and do not affect saved requirements.</n-text>
                     </n-space>
                 </n-form-item-row>
             </n-form>
@@ -51,16 +51,22 @@ interface SelectBaseOption {
 
 const router = useRouter();
 const newEssayStore = useNewEssayStore();
+const requirementsStore = useRequirementsStore();
 
-const requirements = ref([
-    { title: 'Auto', content: 'Auto' },
-    { title: 'Requirement 1', content: 'Content 1' },
-    { title: 'Requirement 2', content: 'Content 2' }
-    // ...
-]);
+
+// interface Requirement {
+//     title: string;
+//     content: string;
+// }
+
+// interface RequirementItem extends Requirement {
+//     id: number;
+// }
+
+const requirements = requirementsStore.requirements;
 
 const options = ref(
-    requirements.value.map((requirement) => {
+    requirements.map((requirement) => {
         return {
             label: requirement.title,
             value: requirement.content
