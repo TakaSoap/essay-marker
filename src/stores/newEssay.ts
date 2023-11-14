@@ -11,6 +11,9 @@ export const useNewEssayStore = defineStore('newEssay', () => {
     const requirementTitle = ref('Default Grading Criteria');
     const requirementContent = ref(defaultRequirement);
 
+    // Ref time
+    const submitTime = ref('');
+
     const studentId = ref('');
     const studentName = ref('');
 
@@ -29,6 +32,7 @@ export const useNewEssayStore = defineStore('newEssay', () => {
         ieltsTopic,
         requirementTitle,
         requirementContent,
+        submitTime,
         studentId,
         studentName,
         reset

@@ -5,23 +5,11 @@
                 <ion-buttons slot="start">
                     <ion-back-button defaultHref="/tabs/marking" :disabled="isLoading"></ion-back-button>
                 </ion-buttons>
-                <ion-title>Essay</ion-title>
+                <ion-title>Essays of {{ studentsStore.currentStudent.name }}</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-            <n-h2>
-                <n-text type="primary"> {{ newEssayStore.title }} </n-text>
-            </n-h2>
-            <n-space>
-                <n-text depth="3"> {{ newEssayStore.studentName }} </n-text>
-                <n-text depth="3"> {{ newEssayStore.submitTime }} </n-text>
-            </n-space>
-            <n-p style="font-size: medium;" v-for="(line, index) in essayLines" :key="index">
-                {{ line }}
-            </n-p>
-            <n-p style="font-size: medium;" v-for="i in 10">
-                {{ newEssayStore.content }}
-            </n-p>
+            {{ studentsStore.currentStudent }}
         </ion-content>
     </ion-page>
 </template>
@@ -33,6 +21,7 @@ const isLoading = ref(false);
 
 const feedbackStore = useFeedbackStore();
 const newEssayStore = useNewEssayStore();
+const studentsStore = useStudentsStore();
 
 const essayLines = computed(() => {
     return newEssayStore.content.split('\n');

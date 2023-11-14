@@ -31,7 +31,7 @@ A JSON format template is provided above.
 Replace all the placeholders with proper contents.
 Comments: Comments should incorporate the content of the essay, not simply generalize it.
 Grade options: A+, A, B+, B, C+, C, F, where A signifies an excellent essay and F indicates a failing grade.
-Comment should be around 100 words.
+Comment should be around 150 words.
 ---
 Now, follow the upcoming instructions to grade the essay.
 `;

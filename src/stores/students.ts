@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Feedback, IeltsFeedback } from '@/stores/feedback';
 
-interface Student {
+export interface Student {
     id: number;
     name: string;
     group: string;
@@ -9,10 +9,11 @@ interface Student {
     essays: Essay[];
 }
 
-interface Essay {
+export interface Essay {
     id: number;
     title: string;
     content: string;
+    submitTime: string;
     ieltsTopic?: string;
     requirementTitle: string;
     feedback?: Feedback | IeltsFeedback;
@@ -50,6 +51,13 @@ export const useStudentsStore = defineStore('students', () => {
                     }
                 }
             ]
+        },
+        {
+            id: 2,
+            name: 'Tina',
+            group: 'B',
+            customInfo: 'A girl that is very good at writing, but needs to pay more attention to grammar',
+            essays: []
         }
     ]);
 
@@ -61,7 +69,7 @@ export const useStudentsStore = defineStore('students', () => {
         essays: []
     });
 
-    const currentEditingStudent: Ref<Student> = ref({
+    const currentStudent: Ref<Student> = ref({
         id: 0,
         name: '',
         group: '',
@@ -69,18 +77,26 @@ export const useStudentsStore = defineStore('students', () => {
         essays: []
     });
 
-    const currentEditingEssay: Ref<Essay> = ref({
+    const currentEssay: Ref<Essay> = ref({
         id: 0,
         title: '',
         content: '',
+        submitTime: '',
         ieltsTopic: undefined,
         requirementTitle: '',
         feedback: undefined
     });
+
+    const groups = ref(['A', 'B']);
     
     function addStudent(student: Student) {
         student.id = students.value.length + 1;
         students.value.push(student);
+
+        // If their group doesn't exist, add the new group to the groups array
+        if (!groups.value.includes(student.group)) {
+            groups.value.push(student.group);
+        }
     }
 
     function editStudent(student: Student) {
@@ -91,6 +107,11 @@ export const useStudentsStore = defineStore('students', () => {
     function deleteStudent(student: Student) {
         const index = students.value.findIndex((s) => s.id === student.id);
         students.value.splice(index, 1);
+
+        // If the group is empty, remove it from the groups array
+        if (students.value.filter((s) => s.group === student.group).length === 0) {
+            groups.value.splice(groups.value.indexOf(student.group), 1);
+        }
     }
 
     function addEssay(student: Student, essay: Essay) {
@@ -114,8 +135,9 @@ export const useStudentsStore = defineStore('students', () => {
     return {
         students,
         newStudent,
-        currentEditingStudent,
-        currentEditingEssay,
+        currentStudent,
+        currentEssay,
+        groups,
         addStudent,
         editStudent,
         deleteStudent,
