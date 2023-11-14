@@ -23,7 +23,7 @@
                                     <div style="margin-bottom: 0">Essay</div>
                                 </template>
                                 <template #description>
-                                    {{ "essay title" }}
+                                    {{ newEssayStore.title }}
                                 </template>
                             </n-thing>
                             <template #suffix>
@@ -32,65 +32,65 @@
                         </n-list-item>
                     </n-list>
                     <div>
-                        <n-space vertical size="small">
-                            <n-text>Score</n-text>
-                            <n-grid :cols="5">
-                                <n-gi>
-                                    <div class="light-green">
-                                        <n-statistic label="Overall">
-                                            <n-number-animation :from="0" :to="feedbackStore.overallScore" />
-                                            <template #suffix>
-                                                <n-text class="max-score" depth="3"> / 9 </n-text>
-                                            </template>
-                                        </n-statistic>
-                                    </div>
-                                </n-gi>
-                                <n-gi>
-                                    <div class="green">
-                                        <n-statistic label="TR">
-                                            <n-number-animation :from="0" :to="feedbackStore.feedback.TR" />
-                                            <template #suffix>
-                                                <n-text class="max-score" depth="3"> / 9 </n-text>
-                                            </template>
-                                        </n-statistic>
-                                    </div>
-                                </n-gi>
-                                <n-gi>
-                                    <div class="light-green">
-                                        <n-statistic label="CC">
-                                            <n-number-animation :from="0" :to="feedbackStore.feedback.CC" />
-                                            <template #suffix>
-                                                <n-text class="max-score" depth="3"> / 9 </n-text>
-                                            </template>
-                                        </n-statistic>
-                                    </div>
-                                </n-gi>
-                                <n-gi>
-                                    <div class="green">
-                                        <n-statistic label="LR">
-                                            <n-number-animation :from="0" :to="feedbackStore.feedback.LR" />
-                                            <template #suffix>
-                                                <n-text class="max-score" depth="3"> / 9 </n-text>
-                                            </template>
-                                        </n-statistic>
-                                    </div>
-                                </n-gi>
-                                <n-gi>
-                                    <div class="light-green">
-                                        <n-statistic label="GRA">
-                                            <n-number-animation :from="0" :to="feedbackStore.feedback.GRA" />
-                                            <template #suffix>
-                                                <n-text class="max-score" depth="3"> / 9 </n-text>
-                                            </template>
-                                        </n-statistic>
-                                    </div>
-                                </n-gi>
-                            </n-grid>
-                        </n-space>
+                        <n-grid v-if="feedbackStore.isIeltsEssay" :cols="5">
+                            <n-gi>
+                                <div class="light-green">
+                                    <n-statistic label="Overall">
+                                        <n-number-animation :from="0" :to="feedbackStore.ieltsOverallScore" />
+                                        <template #suffix>
+                                            <n-text class="max-score" depth="3"> / 9 </n-text>
+                                        </template>
+                                    </n-statistic>
+                                </div>
+                            </n-gi>
+                            <n-gi>
+                                <div class="green">
+                                    <n-statistic label="TR">
+                                        <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.TR" />
+                                        <template #suffix>
+                                            <n-text class="max-score" depth="3"> / 9 </n-text>
+                                        </template>
+                                    </n-statistic>
+                                </div>
+                            </n-gi>
+                            <n-gi>
+                                <div class="light-green">
+                                    <n-statistic label="CC">
+                                        <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.CC" />
+                                        <template #suffix>
+                                            <n-text class="max-score" depth="3"> / 9 </n-text>
+                                        </template>
+                                    </n-statistic>
+                                </div>
+                            </n-gi>
+                            <n-gi>
+                                <div class="green">
+                                    <n-statistic label="LR">
+                                        <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.LR" />
+                                        <template #suffix>
+                                            <n-text class="max-score" depth="3"> / 9 </n-text>
+                                        </template>
+                                    </n-statistic>
+                                </div>
+                            </n-gi>
+                            <n-gi>
+                                <div class="light-green">
+                                    <n-statistic label="GRA">
+                                        <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.GRA" />
+                                        <template #suffix>
+                                            <n-text class="max-score" depth="3"> / 9 </n-text>
+                                        </template>
+                                    </n-statistic>
+                                </div>
+                            </n-gi>
+                        </n-grid>
+                        <n-statistic v-else label="Grade">
+                            <n-gradient-text :type="gradeType">{{ feedbackStore.feedback.grade }}</n-gradient-text>
+                        </n-statistic>
                     </div>
                     <div>
                         <n-space vertical size="small">
-                            <n-text>AI Assessment</n-text>
+                            <n-text depth="3">AI Assessment</n-text>
 
                             <n-input
                                 type="textarea"
@@ -98,11 +98,11 @@
                                     minRows: 3,
                                     maxRows: 20
                                 }"
-                                v-model:value="feedbackStore.feedback.comment"
+                                v-model:value="feedback"
                             />
                         </n-space>
                     </div>
-                    <n-button class="button" type="info" block secondary strong> Save </n-button>
+                    <n-button @click="onSavingFeedback" class="button" type="info" block secondary strong> Save </n-button>
                 </n-space>
             </n-spin>
         </ion-content>
@@ -110,17 +110,45 @@
 </template>
 
 <script setup lang="ts">
-import { DocumentOnePage20Regular, CompassNorthwest16Regular, ChevronRight16Regular } from '@vicons/fluent';
+import { DocumentOnePage20Regular, ChevronRight16Regular } from '@vicons/fluent';
 const router = useRouter();
 const isLoading = ref(false);
 
 const feedbackStore = useFeedbackStore();
+const newEssayStore = useNewEssayStore();
+
+const computedFeedback = computed(() => {
+    if (feedbackStore.isIeltsEssay) {
+        return feedbackStore.ieltsFeedback.comment;
+    } else {
+        return feedbackStore.feedback.comment;
+    }
+});
+
+const feedback = ref(computedFeedback.value);
+
+const gradeType = computed(() => {
+    // A+ A -> 'success'
+    // B+ B -> 'info'
+    // C+ C -> 'warning'
+    // F -> 'error'
+    const grade = feedbackStore.feedback.grade;
+    if (grade === 'F') {
+        return 'error';
+    } else if (grade === 'C' || grade === 'C+') {
+        return 'warning';
+    } else if (grade === 'B' || grade === 'B+') {
+        return 'info';
+    } else {
+        return 'success';
+    }
+});
 
 function handleEssayClick() {
     isLoading.value = true;
     setTimeout(() => {
         isLoading.value = false;
-        router.push('/tabs/marking/essay');
+        router.push('/ai/essay');
     }, 1000);
 }
 </script>

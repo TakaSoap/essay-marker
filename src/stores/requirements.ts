@@ -9,8 +9,22 @@ interface RequirementItem extends Requirement {
     id: number;
 }
 
-const ieltsRequirement = `
-You are going to grade an IELTS writing task 2 essay. The official band descriptors are below.
+export const defaultRequirement = `Please read the following essays carefully and evaluate them based on the provided criteria. Assign the essay a grade from A to F, where A signifies an excellent essay and F indicates a failing grade. Evaluate the essays considering the following aspects:
+1. Thesis and Argument: Does the essay have a clear and compelling thesis statement? Does the essay present logical and coherent arguments to support its thesis?
+2. Organization and Structure: Is the essay well-organized with a clear introduction, body, and conclusion? Does it follow a logical progression of ideas?
+3. Evidence and Support: Does the essay provide relevant and credible evidence to back its claims? Are the sources well-integrated and properly cited?
+4. Writing Style and Voice: Is the essay's writing style appropriate for the target audience? Does the writer exhibit a distinct and engaging voice?
+5. Grammar, Syntax, and Mechanics: Are there any grammatical, spelling, or punctuation errors? Is the syntax varied and does it contribute to the clarity and style of the writing?
+6. Originality and Creativity: Does the essay provide a unique perspective on the topic? Does it exhibit original thought and insight?
+Provide constructive feedback for each essay, highlighting strengths and areas for improvement. If specific criteria are not met, please explain why and suggest ways the essay could be enhanced to meet those standards. When grading, take into account the overall impact of the essay alongside the individual elements. Your feedback should be balanced, fair, and aimed at helping the writer improve their work.
+For example, you can structure your feedback like:
+- Positive Feedback: Highlight what the essay does well, referencing specific examples from the text.
+- Areas for Improvement: Identify parts of the essay that could be improved, offering specific suggestions on how to address these issues.
+- Remarks on Specific Criteria: Give a short commentary about each of the grading criteria, mentioning how well the essay meets each standard.
+- Final Comments: Provide a closing thought or piece of advice that guides the writer toward enhancing their essay on the next draft.
+Remember to maintain a respectful and encouraging tone throughout your evaluation, ensuring that the writer feels motivated to continue refining their writing skills.`;
+
+const ieltsRequirement = `You are going to grade an IELTS writing task 2 essay. The official band descriptors are below.
 ---
 Task Response
 
@@ -187,6 +201,11 @@ export const useRequirementsStore = defineStore('requirements', () => {
     const requirements: Ref<RequirementItem[]> = ref([
         {
             id: 1,
+            title: 'Default Grading Criteria',
+            content: defaultRequirement
+        },
+        {
+            id: 2,
             title: 'IELTS Writing Task 2 Grading Criteria',
             content: ieltsRequirement
         }
@@ -197,9 +216,9 @@ export const useRequirementsStore = defineStore('requirements', () => {
         content: ''
     });
 
-    const currentRequirement = ref<Requirement>({
-        title: '',
-        content: ''
+    const currentEditingRequirement = ref<Requirement>({
+        title: 'Default Grading Criteria',
+        content: defaultRequirement
     });
 
     function addRequirement(requirement: Requirement) {
@@ -225,7 +244,7 @@ export const useRequirementsStore = defineStore('requirements', () => {
     return {
         requirements,
         newRequirement,
-        currentRequirement,
+        currentEditingRequirement,
         addRequirement,
         editRequirement,
         deleteRequirement

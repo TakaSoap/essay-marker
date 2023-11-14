@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia';
+import { defaultRequirement } from './requirements';
+
 
 export const useNewEssayStore = defineStore('newEssay', () => {
     const title = ref('');
@@ -6,8 +8,8 @@ export const useNewEssayStore = defineStore('newEssay', () => {
 
     const ieltsTopic = ref('');
 
-    const requirementTitle = ref('');
-    const requirementContent = ref('');
+    const requirementTitle = ref('Default Grading Criteria');
+    const requirementContent = ref(defaultRequirement);
 
     const studentId = ref('');
     const studentName = ref('');

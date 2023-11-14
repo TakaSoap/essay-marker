@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 
-interface Feedback {
+export interface Feedback {
+    grade: string;
+    comment: string;
+}
+
+export interface IeltsFeedback {
     TR: number;
     CC: number;
     LR: number;
@@ -9,7 +14,7 @@ interface Feedback {
 }
 
 export const useFeedbackStore = defineStore('feedback', () => {
-    const feedback: Ref<Feedback> = ref({
+    const ieltsFeedback: Ref<IeltsFeedback> = ref({
         TR: 0,
         CC: 0,
         LR: 0,
@@ -17,19 +22,33 @@ export const useFeedbackStore = defineStore('feedback', () => {
         comment: ''
     });
 
-    const overallScore = computed(() => {
-        let score = feedback.value.TR + feedback.value.CC + feedback.value.LR + feedback.value.GRA;
+    const feedback: Ref<Feedback> = ref({
+        grade: '',
+        comment: ''
+    });
+
+    const ieltsOverallScore = computed(() => {
+        let score = ieltsFeedback.value.TR + ieltsFeedback.value.CC + ieltsFeedback.value.LR + ieltsFeedback.value.GRA;
         score /= 4;
         return score;
     });
 
-    function setFeedback(newFeedback: Feedback) {
-        feedback.value = newFeedback;
+    const isIeltsEssay = ref(false);
+
+    function setFeedback(newFeedback: Feedback | IeltsFeedback, isIelts: boolean) {
+        isIeltsEssay.value = isIelts;
+        if (isIelts) {
+            ieltsFeedback.value = newFeedback as IeltsFeedback;
+        } else {
+            feedback.value = newFeedback as Feedback;
+        }
     }
 
     return {
+        isIeltsEssay,
+        ieltsFeedback,
         feedback,
         setFeedback,
-        overallScore
+        ieltsOverallScore
     };
 });

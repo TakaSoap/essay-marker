@@ -188,12 +188,11 @@ function submitEssay() {
     openaiRequest(newEssayStore.requirementContent, newEssayStore.content, newEssayStore.ieltsTopic)
         .then((response) => {
             if (response) {
-                console.log(response);
                 spinStore.isSpining = false;
 
                 // response is a string of JSON
 
-                feedbackStore.setFeedback(JSON.parse(response));
+                feedbackStore.setFeedback(JSON.parse(response), newEssayStore.requirementTitle === 'IELTS Writing Task 2 Grading Criteria');
                 router.push('/ai/results');
             }
         })
