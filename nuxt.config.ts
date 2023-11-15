@@ -17,7 +17,7 @@ export default defineNuxtConfig({
 
         },
         css: {
-            utilities: true,
+            utilities: true
         },
         config: {}
     },

@@ -25,7 +25,7 @@ export const useStudentsStore = defineStore('students', () => {
         {
             id: 1,
             name: 'John',
-            group: 'A',
+            group: 'Group A',
             customInfo: 'A naughty little boy whose writing needs more attention in terms of coherence',
             essays: [
                 {
@@ -33,6 +33,7 @@ export const useStudentsStore = defineStore('students', () => {
                     title: 'A Happy Day',
                     content: `Yesterday was the bestest day ever! I'm in middle school now. I woke up with sun shining in my room and Mom made pancakes that look like smiley faces! At school, my friend Joey shared his crayons and we drawed a dragon together in class. It was super cool! During lunch, I played tag and was super fast. No one could catch me! Then, the music teacher let me play the tambourine. I made lots of jingly sounds. When I got home, Dad let me help make cookies and I even got to lick the spoon! It was a happy, happy day!`,
                     ieltsTopic: undefined,
+                    submitTime: '2021-09-01 12:00:00',
                     requirementTitle: 'Grading Criteria for Secondary First-Grader Essays',
                     feedback: {
                         grade: 'B+',
@@ -44,6 +45,7 @@ export const useStudentsStore = defineStore('students', () => {
                     title: 'A Sad Day',
                     content: `Today was super duper sad. It started all sunny, but then our teacher told us that Goldie, our class fishy, swam up to the sky pond. My heart felt like a heavy backpack. Every time I looked at the fishbowl, my eyes got all swimmy like there were fishies in them too. We made a circle and talked about Goldie's shiny scales and how he did the best fishy flips. I shared how Goldie wiggled his fins just for me. I miss him. We drew rainbow pictures to say goodbye. Today was the saddest day, but I won’t forget my little fishy friend.`,
                     ieltsTopic: undefined,
+                    submitTime: '2021-09-01 12:00:00',
                     requirementTitle: 'Grading Criteria for Secondary First-Grader Essays',
                     feedback: {
                         grade: 'A',
@@ -55,7 +57,7 @@ export const useStudentsStore = defineStore('students', () => {
         {
             id: 2,
             name: 'Tina',
-            group: 'B',
+            group: 'Group B',
             customInfo: 'A girl that is very good at writing, but needs to pay more attention to grammar',
             essays: []
         }
@@ -87,7 +89,7 @@ export const useStudentsStore = defineStore('students', () => {
         feedback: undefined
     });
 
-    const groups = ref(['A', 'B']);
+    const groups = ref(['Group A', 'Group B']);
     
     function addStudent(student: Student) {
         student.id = students.value.length + 1;
@@ -97,6 +99,8 @@ export const useStudentsStore = defineStore('students', () => {
         if (!groups.value.includes(student.group)) {
             groups.value.push(student.group);
         }
+
+        resetNewStudent();
     }
 
     function editStudent(student: Student) {
@@ -104,14 +108,23 @@ export const useStudentsStore = defineStore('students', () => {
         students.value[index] = student;
     }
 
-    function deleteStudent(student: Student) {
-        const index = students.value.findIndex((s) => s.id === student.id);
-        students.value.splice(index, 1);
+    function deleteStudents(id: number[]) {
+        // delete by id
+        students.value = students.value.filter((s) => !id.includes(s.id));
 
-        // If the group is empty, remove it from the groups array
-        if (students.value.filter((s) => s.group === student.group).length === 0) {
-            groups.value.splice(groups.value.indexOf(student.group), 1);
-        }
+        // If a group is empty, remove it from the groups array
+        groups.value = groups.value.filter((g) => students.value.some((s) => s.group === g));
+
+    }
+
+    function resetNewStudent() {
+        newStudent.value = {
+            id: 0,
+            name: '',
+            group: '',
+            customInfo: '',
+            essays: []
+        };
     }
 
     function addEssay(student: Student, essay: Essay) {
@@ -140,7 +153,8 @@ export const useStudentsStore = defineStore('students', () => {
         groups,
         addStudent,
         editStudent,
-        deleteStudent,
+        deleteStudents,
+        resetNewStudent,
         addEssay,
         editEssay,
         deleteEssay

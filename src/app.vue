@@ -48,4 +48,6 @@ onMounted(() => {
 .main-content {
     min-height: 80vh;
 }
+
+
 </style>

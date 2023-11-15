@@ -141,7 +141,7 @@ function handleRequirementClick() {
 }
 
 function handleStudentClick() {
-    router.push('/ai/student');
+    // router.push('/ai/student');
 }
 
 const essayStatus = ref('');
@@ -208,7 +208,7 @@ function submitEssay() {
 }
 </script>
 
-<style scoped>
+<style>
 .icon-container {
     display: flex;
     flex-direction: row;
@@ -243,4 +243,12 @@ function submitEssay() {
 ion-fab-button {
     margin-top: 1em;
 }
+
+.n-list-item__prefix {
+    max-height: 24px;
+}
+.n-thing-header{
+    margin-bottom: 0 !important;
+}
+
 </style>
