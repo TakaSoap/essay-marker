@@ -59,7 +59,29 @@ export const useStudentsStore = defineStore('students', () => {
             name: 'Tina',
             group: 'Group B',
             customInfo: 'A girl that is very good at writing, but needs to pay more attention to grammar',
-            essays: []
+            essays: [
+                {
+                    id: 1,
+                    title: 'IELTS Writing Task 2 Practice 1',
+                    content: `There is a worldwide phenomenon that more and more people are using popular languages nowadays such as English and Spanish. In contrast, the number of people using other languages is dropping. In my opinion, this is a case that has both positive and negative aspects.
+
+                    It must be admitted that the popularization of some specific languages did play a key role in the globalization, making millions of job opportunities while optimizing labour costs for enterprises. Take English as an example, by mastering such a popular language, skilled programmers in some Asia countries like China and India are able to not only write codes for local tech company, but also contribute to the world’s leading tech companies such as Apple and Microsoft. Besides, many countries in south-east Asia have taken English as their second official language, which led to a result that many manufacturing companies like Foxconn built factories there to better reduce their labour costs. This creates a win-win situation for both employees and employers.
+                    
+                    However, everything has its both sides. The popularity of a few languages is accompanied by the marginalization of other niche languages, causing the disappearance of some featured cultures. For instance, the promotion of Mandarin Chinese in China has made the number of dialects speaker there decreased. This has resulted in many young people in China not being able to get familiar with their home culture, since they can not understand the dialect used in their hometown. In addition, many works of literature and art are being lost, because they are in language that fewer and fewer people may understand.
+                    
+                    In conclusion, the increasement of people using several dominant languages do lead to further globalization, while marginalization and vanishment of languages be in the minority can also have negative impacts on human cultures.`,
+                    ieltsTopic: 'Across the recent world, only a few languages are increasing in use, while some others decline. Is it a positive or negative development?',
+                    submitTime: '2022-09-01 12:00:00',
+                    requirementTitle: 'IELTS Writing Task 2 Grading Criteria',
+                    feedback: {
+                        TR: 7,
+                        CC: 7,
+                        LR: 7,
+                        GRA: 7,
+                        comment: `This essay effectively addresses the prompt and demonstrates a clear understanding of the topic. The author presents a well-structured argument with a clear introduction, body paragraphs, and conclusion. The essay is well-organized and easy to follow. The author uses a variety of vocabulary and sentence structures, and the essay is generally free of grammatical errors. However, there are a few minor spelling errors that could be improved. Overall, a well-written essay that demonstrates a strong command of the English language.`
+                    }
+                }
+            ]
         }
     ]);
 

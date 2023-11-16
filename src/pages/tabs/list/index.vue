@@ -47,7 +47,7 @@
                                 </n-collapse-transition>
                                 <n-list-item v-for="student in searchedOptions" @click="handleStudentClick(student)">
                                     <template #prefix>
-                                        <n-avatar round size="medium" :src="avatarPlaceholder + student.name" />
+                                        <n-avatar round size="medium" :src="avatarPlaceholder + student.id" />
                                     </template>
                                     <n-thing>
                                         <template #header>
@@ -72,24 +72,12 @@
         </ion-content>
         <ion-footer v-if="isStudentsEditMode || isRequirementsEditMode">
             <div style="margin: 6px">
-                <n-grid x-gap="6" cols="2">
-                    <n-gi>
-                        <n-button block size="large" type="error" @click="deleteStudents">
-                            <template #icon>
-                                <Delete16Regular />
-                            </template>
-                            Remove
-                        </n-button>
-                    </n-gi>
-                    <n-gi>
-                        <n-button block :disabled="isEditBtnDisabled" size="large" type="primary" @click="showEditStudentForm">
-                            <template #icon>
-                                <PersonEdit20Regular />
-                            </template>
-                            Edit
-                        </n-button>
-                    </n-gi>
-                </n-grid>
+                <n-button block size="large" type="error" @click="deleteStudents">
+                    <template #icon>
+                        <Delete16Regular />
+                    </template>
+                    Remove
+                </n-button>
             </div>
         </ion-footer>
 
@@ -112,37 +100,6 @@
                         </n-gi>
                         <n-gi>
                             <n-button block type="primary" @click="addStudent">Add</n-button>
-                        </n-gi>
-                    </n-grid>
-                </n-space>
-            </n-drawer-content>
-        </n-drawer>
-
-        <n-drawer v-model:show="isEditStudentShown" placement="bottom" :height="301">
-            <n-drawer-content title="Edit Student">
-                <n-space vertical size="large">
-                    <n-input placeholder="Name" :status="nameStatus" clearable v-model:value="studentsStore.currentStudent.name" />
-                    <n-select
-                        placeholder="Group"
-                        :status="groupStatus"
-                        clearable
-                        v-model:value="studentsStore.currentStudent.group"
-                        :options="newStudentGroupOptions"
-                    >
-                    </n-select>
-                    <n-input
-                        placeholder="Custom Info"
-                        :status="customInfoStatus"
-                        type="textarea"
-                        clearable
-                        v-model:value="studentsStore.currentStudent.customInfo"
-                    />
-                    <n-grid x-gap="6" cols="2">
-                        <n-gi>
-                            <n-button block secondary type="error">Cancel</n-button>
-                        </n-gi>
-                        <n-gi>
-                            <n-button block type="primary" @click="editStudent">Confirm</n-button>
                         </n-gi>
                     </n-grid>
                 </n-space>
@@ -173,7 +130,7 @@ const selectedGroupStudents = computed(() => {
 // searched based on selectedGroupStudents
 const searchedOptions = computed(() => {
     return selectedGroupStudents.value.filter((student) => {
-        return student.name.includes(searchStudentInput.value);
+        return student.name.toLowerCase().includes(searchStudentInput.value.toLowerCase());
     });
 });
 
@@ -212,7 +169,7 @@ function handleStudentClick(student: Student) {
         return;
     } else {
         studentsStore.currentStudent = student;
-        router.push('/student/essays');
+        router.push('/student');
     }
 }
 
@@ -225,6 +182,11 @@ function toggleEditMode() {
     resetNewStudentFormStatus();
     studentsStore.resetNewStudent();
 }
+
+// If router to other pages disable edit mode
+watch(router.currentRoute, () => {
+    isStudentsEditMode.value = false;
+});
 
 const isRequirementsEditMode = ref(false);
 
@@ -283,22 +245,14 @@ function addStudent() {
 function deleteStudents() {
     studentsStore.deleteStudents(checkedStudents.value);
 }
-
-const isEditStudentShown = ref(false);
-function showEditStudentForm() {
-    // checkedStudents array only contains id
-    studentsStore.currentStudent = studentsStore.students.find((student) => student.id === checkedStudents.value[0]) as Student;
-    isEditStudentShown.value = true;
-}
-
-const isEditBtnDisabled = computed(() => {
-    return checkedStudents.value.length !== 1;
-});
 </script>
 
 <style>
 .n-list-item__prefix {
     max-height: 34px;
+}
+.n-list-item__suffix {
+    max-height: 24px;
 }
 .n-thing-header {
     margin-bottom: 0 !important;

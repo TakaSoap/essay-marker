@@ -94,14 +94,11 @@
                     </n-form>
                     <div class="button-container">
                         <n-button class="button" type="error" block secondary strong> Clear All </n-button>
-                        <n-button class="button" type="info" block secondary strong @click="submitEssay"> Submit </n-button>
+                        <n-button class="button" type="primary" block secondary strong @click="submitEssay"> Submit </n-button>
                     </div>
                 </n-space>
                 <template #description> {{ spinStore.spinText }} </template>
             </n-spin>
-            <div style="margin-top: 2em">
-                {{ newEssayStore }}
-            </div>
         </ion-content>
     </ion-page>
 </template>
@@ -141,7 +138,7 @@ function handleRequirementClick() {
 }
 
 function handleStudentClick() {
-    // router.push('/ai/student');
+    router.push('/ai/student');
 }
 
 const essayStatus = ref('');
@@ -208,7 +205,7 @@ function submitEssay() {
 }
 </script>
 
-<style>
+<style scoped>
 .icon-container {
     display: flex;
     flex-direction: row;

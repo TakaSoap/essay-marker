@@ -3,8 +3,8 @@
         <n-config-provider
             :theme="themeStore.theme"
             :theme-overrides="themeStore.theme === null ? lightThemeOverrides : darkThemeOverrides"
-            :locale="enUS"
-            :date-locale="dateEnUS"
+            :locale="enGB"
+            :date-locale="dateEnGB"
         >
             <n-loading-bar-provider>
                 <n-message-provider>
@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/theme';
+import { enGB, dateEnGB } from 'naive-ui';
 import '@/theme/variables.css';
 
 const themeStore = useThemeStore();

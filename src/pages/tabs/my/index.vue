@@ -11,6 +11,7 @@
                 <ion-label>Logout</ion-label>
             </ion-button>
         </ion-content>
+        
         <n-button @click="OnLogoutBtnClick" type="error">Logout</n-button>
         <n-button quaternary @click="themeStore.toggleTheme">
                 <template #icon>
@@ -19,7 +20,7 @@
                         <Moon v-else />
                     </n-icon>
                 </template>
-                切换主题
+                Toggle Theme
             </n-button>
     </ion-page>
 </template>

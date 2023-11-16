@@ -14,7 +14,7 @@ export const useNewEssayStore = defineStore('newEssay', () => {
     // Ref time
     const submitTime = ref('');
 
-    const studentId = ref('');
+    const studentId = ref(0);
     const studentName = ref('');
 
     function reset () {
@@ -22,7 +22,7 @@ export const useNewEssayStore = defineStore('newEssay', () => {
         content.value = '';
         requirementTitle.value = '';
         requirementContent.value = '';
-        studentId.value = '';
+        studentId.value = 0;
         studentName.value = '';
     } 
 

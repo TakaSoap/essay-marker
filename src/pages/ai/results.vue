@@ -5,14 +5,14 @@
                 <ion-buttons slot="start">
                     <ion-back-button defaultHref="/tabs/marking" :disabled="isLoading"></ion-back-button>
                 </ion-buttons>
-                <ion-title>Results</ion-title>
+                <ion-title>Feedback</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
             <n-spin :show="isLoading">
                 <n-space vertical size="large">
                     <n-list hoverable clickable bordered>
-                        <n-list-item @click="handleEssayClick">
+                        <n-list-item @click="showEssay">
                             <template #prefix>
                                 <n-icon size="24">
                                     <DocumentOnePage20Regular />
@@ -20,7 +20,7 @@
                             </template>
                             <n-thing>
                                 <template #header>
-                                    <div style="margin-bottom: 0">Essay</div>
+                                    <div>Essay</div>
                                 </template>
                                 <template #description>
                                     {{ newEssayStore.title }}
@@ -144,7 +144,7 @@ const gradeType = computed(() => {
     }
 });
 
-function handleEssayClick() {
+function showEssay() {
     isLoading.value = true;
     setTimeout(() => {
         isLoading.value = false;
