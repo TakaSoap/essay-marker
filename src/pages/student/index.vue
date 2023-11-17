@@ -12,7 +12,7 @@
             <n-space vertical>
                 <div style="padding: 6px 6px">
                     <n-list clickable hoverable bordered>
-                        <n-list-item @click="showEditStudentForm">
+                        <n-list-item @click="toggleEditStudentForm">
                             <template #prefix>
                                 <n-avatar round size="medium" :src="avatarPlaceholder + studentsStore.currentStudent.id" />
                             </template>
@@ -122,7 +122,7 @@
                     <n-input placeholder="Custom Info" :status="customInfoStatus" type="textarea" clearable v-model:value="tempCustomInfo" />
                     <n-grid x-gap="6" cols="2">
                         <n-gi>
-                            <n-button block secondary type="error">Cancel</n-button>
+                            <n-button block secondary type="error" @click="toggleEditStudentForm">Cancel</n-button>
                         </n-gi>
                         <n-gi>
                             <n-button block type="primary" @click="editStudent">Confirm</n-button>
@@ -190,8 +190,8 @@ const studentGroupOptions = computed(() => {
     });
 });
 
-function showEditStudentForm() {
-    isEditStudentShown.value = true;
+function toggleEditStudentForm() {
+    isEditStudentShown.value = !isEditStudentShown.value;
 }
 function editStudent() {
     if (tempName.value === '') {

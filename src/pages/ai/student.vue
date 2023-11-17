@@ -19,7 +19,7 @@
                         </n-gi>
                         <n-gi span="2">
                             <n-popselect v-model:value="selectedGroup" :options="groupOptions">
-                                <n-button block style="padding: 0" quaternary type="primary"> Filter </n-button>
+                                <n-button block style="padding: 0" quaternary :type="filterButtonType"> {{filterText}} </n-button>
                             </n-popselect>
                         </n-gi>
                     </n-grid>
@@ -44,6 +44,8 @@
                         </template>
                     </n-list-item>
                 </n-list>
+
+                <n-result style="margin-top: 5em;" v-if="searchedOptions.length === 0" status="404" title="Nothing Here" description="Maybe another keyword?"></n-result>
             </n-space>
         </ion-content>
     </ion-page>
@@ -79,6 +81,21 @@ const searchedOptions = computed(() => {
 const searchStudentInput = ref('');
 
 const selectedGroup = ref('all');
+
+const filterText = computed(() => {
+    if (selectedGroup.value === 'all') {
+        return 'Filter';
+    } else {
+        return 'Filtered';
+    }
+});
+const filterButtonType = computed(() => {
+    if (selectedGroup.value === 'all') {
+        return 'primary';
+    } else {
+        return 'info';
+    }
+});
 
 // need an 'all' option
 const groupOptions = computed(() => {

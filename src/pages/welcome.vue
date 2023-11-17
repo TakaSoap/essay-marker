@@ -4,11 +4,26 @@
             <swiper
                 :modules="modules"
                 :pagination="{
-                    type: 'progressbar',
+                    type: 'progressbar'
                 }"
                 :navigation="true"
             >
-                <swiper-slide>Slide 1</swiper-slide>
+                <swiper-slide>
+                    <div class="welcome-banner" ref="welcomeBanner">
+                        <h1 style="text-align: center; margin: 0rem 0 10rem 0">Writing Marker</h1>
+                        <ul>
+                            <li>
+                                <img alt="rhino standing near grass" src="/public/p1 3x.png" style="text-align: center width:500px; height:500px;;" />
+                            </li>
+                        </ul>
+
+                        <ion-button router-link="/">
+                            <!-- Start Button -->
+                            <ion-icon :icon="ioniconsGameControllerOutline" />
+                            <ion-label>Start</ion-label>
+                        </ion-button>
+                    </div>
+                </swiper-slide>
                 <swiper-slide>Slide 2</swiper-slide>
                 <swiper-slide>
                     <div>

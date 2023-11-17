@@ -30,10 +30,7 @@
         </ion-content>
         <ion-footer>
             <n-card content-style="padding: 1em" :bordered="false" embedded>
-                <n-button block type="info" @click="goBack">
-                    <template #icon>
-                        <n-icon><Checkmark16Regular /></n-icon>
-                    </template>
+                <n-button block type="primary" secondary @click="goBack">
                     Confirm
                 </n-button>
             </n-card>

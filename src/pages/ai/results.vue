@@ -33,66 +33,66 @@
                     </n-list>
                     <div>
                         <n-grid v-if="feedbackStore.isIeltsEssay" :cols="11" x-gap="6">
-                                <n-gi span="3">
-                                    <n-card content-style="padding: 6px" hoverable>
-                                        <div class="card-content">
-                                            <n-statistic label="Overall">
-                                                <n-number-animation :from="0" :to="feedbackStore.ieltsOverallScore" :precision="1" />
-                                                <template #suffix>
-                                                    <n-text class="max-score" depth="3"> / 9 </n-text>
-                                                </template>
-                                            </n-statistic>
-                                        </div>
-                                    </n-card>
-                                </n-gi>
-                                <n-gi span="2">
-                                    <n-card content-style="padding: 6px" hoverable>
-                                        <div class="card-content">
-                                            <n-statistic label="TR">
-                                                <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.TR" />
-                                                <template #suffix>
-                                                    <n-text class="max-score" depth="3"> / 9 </n-text>
-                                                </template>
-                                            </n-statistic>
-                                        </div>
-                                    </n-card>
-                                </n-gi>
-                                <n-gi span="2">
-                                    <n-card content-style="padding: 6px" hoverable>
-                                        <div class="card-content">
-                                            <n-statistic label="CC">
-                                                <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.CC" />
-                                                <template #suffix>
-                                                    <n-text class="max-score" depth="3"> / 9 </n-text>
-                                                </template>
-                                            </n-statistic>
-                                        </div>
-                                    </n-card>
-                                </n-gi>
-                                <n-gi span="2">
-                                    <n-card content-style="padding: 6px" hoverable>
-                                        <div class="card-content">
-                                            <n-statistic label="LR">
-                                                <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.LR" />
-                                                <template #suffix>
-                                                    <n-text class="max-score" depth="3"> / 9 </n-text>
-                                                </template>
-                                            </n-statistic>
-                                        </div>
-                                    </n-card>
-                                </n-gi>
-                                <n-gi span="2">
-                                    <n-card content-style="padding: 6px" hoverable>
-                                        <div class="card-content">
-                                            <n-statistic label="GRA">
-                                                <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.GRA" />
-                                                <template #suffix>
-                                                    <n-text class="max-score" depth="3"> / 9 </n-text>
-                                                </template>
-                                            </n-statistic>
-                                        </div>
-                                    </n-card>
-                                </n-gi>
+                            <n-gi span="3">
+                                <n-card content-style="padding: 6px" hoverable>
+                                    <div class="card-content">
+                                        <n-statistic label="Overall">
+                                            <n-number-animation :from="0" :to="feedbackStore.ieltsOverallScore" :precision="1" />
+                                            <template #suffix>
+                                                <n-text class="max-score" depth="3"> / 9 </n-text>
+                                            </template>
+                                        </n-statistic>
+                                    </div>
+                                </n-card>
+                            </n-gi>
+                            <n-gi span="2">
+                                <n-card content-style="padding: 6px" hoverable>
+                                    <div class="card-content">
+                                        <n-statistic label="TR">
+                                            <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.TR" />
+                                            <template #suffix>
+                                                <n-text class="max-score" depth="3"> / 9 </n-text>
+                                            </template>
+                                        </n-statistic>
+                                    </div>
+                                </n-card>
+                            </n-gi>
+                            <n-gi span="2">
+                                <n-card content-style="padding: 6px" hoverable>
+                                    <div class="card-content">
+                                        <n-statistic label="CC">
+                                            <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.CC" />
+                                            <template #suffix>
+                                                <n-text class="max-score" depth="3"> / 9 </n-text>
+                                            </template>
+                                        </n-statistic>
+                                    </div>
+                                </n-card>
+                            </n-gi>
+                            <n-gi span="2">
+                                <n-card content-style="padding: 6px" hoverable>
+                                    <div class="card-content">
+                                        <n-statistic label="LR">
+                                            <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.LR" />
+                                            <template #suffix>
+                                                <n-text class="max-score" depth="3"> / 9 </n-text>
+                                            </template>
+                                        </n-statistic>
+                                    </div>
+                                </n-card>
+                            </n-gi>
+                            <n-gi span="2">
+                                <n-card content-style="padding: 6px" hoverable>
+                                    <div class="card-content">
+                                        <n-statistic label="GRA">
+                                            <n-number-animation :from="0" :to="feedbackStore.ieltsFeedback.GRA" />
+                                            <template #suffix>
+                                                <n-text class="max-score" depth="3"> / 9 </n-text>
+                                            </template>
+                                        </n-statistic>
+                                    </div>
+                                </n-card>
+                            </n-gi>
                         </n-grid>
                         <n-statistic v-else label="Grade">
                             <n-gradient-text :type="gradeType">{{ feedbackStore.feedback.grade }}</n-gradient-text>
@@ -108,7 +108,7 @@
                                     minRows: 3,
                                     maxRows: 20
                                 }"
-                                v-model:value="feedback"
+                                v-model:value="computedFeedback"
                             />
                         </n-space>
                     </div>
@@ -132,13 +132,18 @@ const studentsStore = useStudentsStore();
 
 const computedFeedback = computed(() => {
     if (feedbackStore.isIeltsEssay) {
-        return feedbackStore.ieltsFeedback.comment;
+        return ref(tempComment.comment);
     } else {
-        return feedbackStore.feedback.comment;
+        return ref(tempComment.ieltsComment);
     }
 });
 
-const feedback = ref(computedFeedback.value);
+const tempComment = {
+    ieltsComment: feedbackStore.ieltsFeedback.comment,
+    comment: feedbackStore.feedback.comment
+}
+const feedback = ref(tempComment.comment);
+const ieltsFeedback = ref(tempComment.ieltsComment);
 
 const gradeType = computed(() => {
     // A+ A -> 'success'
@@ -158,18 +163,13 @@ const gradeType = computed(() => {
 });
 
 function showEssay() {
-    isLoading.value = true;
-    setTimeout(() => {
-        isLoading.value = false;
-        router.push('/ai/essay');
-    }, 1000);
+    router.push('/ai/essay');
 }
 
 function saveEssay() {
-
     if (feedbackStore.isIeltsEssay) {
         studentsStore.addEssay(newEssayStore.studentId, {
-            id: 0,
+            id: newEssayStore.id,
             title: newEssayStore.title,
             content: newEssayStore.content,
             submitTime: newEssayStore.submitTime,
@@ -180,38 +180,33 @@ function saveEssay() {
                 CC: feedbackStore.ieltsFeedback.CC,
                 LR: feedbackStore.ieltsFeedback.LR,
                 GRA: feedbackStore.ieltsFeedback.GRA,
-                comment: computedFeedback.value
+                comment: feedback.value
             }
         });
     } else {
         studentsStore.addEssay(newEssayStore.studentId, {
-            id: 0,
+            id: newEssayStore.id,
             title: newEssayStore.title,
             content: newEssayStore.content,
             submitTime: newEssayStore.submitTime,
             requirementTitle: newEssayStore.requirementTitle,
             feedback: {
                 grade: feedbackStore.feedback.grade,
-                comment: computedFeedback.value
+                comment: feedback.value
             }
         });
     }
 
     message.success('Saved');
     newEssayStore.reset();
+    feedback.value = '';
     router.push('/tabs/marking');
-
 }
 </script>
 
 <style scoped>
-.light-green {
-    height: 108px;
-    background-color: rgba(0, 128, 0, 0.12);
-}
-.green {
-    height: 108px;
-    background-color: rgba(0, 128, 0, 0.24);
+.max-score {
+    font-size: 0.8em;
 }
 
 .score-label {

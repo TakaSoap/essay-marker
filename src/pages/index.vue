@@ -11,7 +11,7 @@
             <div class="welcome-banner" ref="welcomeBanner">
                 <h1 style="text-align: center; margin: 10rem 0 10rem 0">Welcome to Essay Marker</h1>
 
-                <ion-button router-link="/tabs/list" expand="block" shape="round" class="welcome-button">
+                <ion-button router-link="/tabs/marking" expand="block" shape="round" class="welcome-button">
                     <ion-icon :icon="ioniconsLogInOutline" />
                     <ion-label>Login</ion-label>
                 </ion-button>
@@ -31,8 +31,11 @@
 <script setup lang="ts">
 const ionHeaderWelcome = ref<HTMLElement | null>(null);
 const welcomeBanner = ref<HTMLElement | null>(null);
+const router = useRouter();
 
 onMounted(() => {
+    router.push('/tabs/marking');
+
     // 计算剩余可用高度
     const calculateRemainingHeight = () => {
         if (welcomeBanner.value && ionHeaderWelcome.value) {

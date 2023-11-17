@@ -67,11 +67,12 @@ function toFeedback() {
 }
 
 function toMarking() {
+    newEssayStore.id = studentsStore.currentEssay.id;
     newEssayStore.content = studentsStore.currentEssay.content;
     newEssayStore.title = studentsStore.currentEssay.title;
     newEssayStore.studentId = studentsStore.currentStudent.id;
     newEssayStore.studentName = studentsStore.currentStudent.name;
-    router.push('/student/marking');
+    router.push('/tabs/marking');
 }
 
 function deleteEssay() {

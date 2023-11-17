@@ -1,60 +1,75 @@
 <template>
     <ion-page>
         <ion-content class="ion-padding">
+            <div style="display: flex; justify-content: right">
+                <n-tooltip placement="top" trigger="click">
+                    <template #trigger>
+                        <n-button circle type="primary" secondary size="small" style="margin: 16px 16px">
+                            <n-icon size="20"><Question20Regular /></n-icon>
+                        </n-button>
+                    </template>
+                    <div>
+                        <n-p class="tip-text">· Select the requirement and target student!</n-p>
+                        <n-p class="tip-text">· Fill out or upload the essay!</n-p>
+                        <n-p class="tip-text">· Submit and enjoy! 🎉</n-p>
+                    </div>
+                </n-tooltip>
+            </div>
             <div class="icon-container">
                 <ion-icon :icon="ioniconsLogoIonic" size="large" color="primary"></ion-icon>
                 <h1 style="margin: 0 0 0 1em">Essay Marker</h1>
             </div>
-            <n-space vertical size="large">
-                <n-list hoverable clickable bordered>
-                    <n-list-item @click="handleRequirementClick">
-                        <template #prefix>
-                            <n-icon size="24"><CompassNorthwest16Regular /></n-icon>
-                        </template>
-                        <n-thing>
-                            <template #header>
-                                <div style="margin-bottom: 0">Requirement</div>
+            <n-spin :show="spinStore.isSpining" size="large">
+                <n-space vertical size="large">
+                    <n-list :hoverable="!spinStore.isSpining" clickable bordered>
+                        <n-list-item @click="handleRequirementClick">
+                            <template #prefix>
+                                <n-icon size="24"><CompassNorthwest16Regular /></n-icon>
                             </template>
-                            <template #description> {{ requirementTitle }} </template>
-                        </n-thing>
-                        <template #suffix>
-                            <n-icon size="24"><ChevronRight16Regular /></n-icon>
-                        </template>
-                    </n-list-item>
-                    <n-list-item @click="handleStudentClick">
-                        <template #prefix>
-                            <n-icon size="24"><Person16Regular /></n-icon>
-                        </template>
-                        <n-thing title="Student">
-                            <template #description> {{ studentName }} </template>
-                        </n-thing>
-                        <template #suffix>
-                            <n-icon size="24"><ChevronRight16Regular /></n-icon>
-                        </template>
-                    </n-list-item>
-                </n-list>
-                <n-form style="margin-top: 1em">
-                    <n-form-item-row label="Title">
-                        <n-input clearable :disabled="isInputsDisabled" v-model:value="newEssayStore.title" />
-                    </n-form-item-row>
-                    <n-form-item-row
-                        v-if="newEssayStore.requirementTitle === 'IELTS Writing Task 2 Grading Criteria'"
-                        label="IELTS Writing Task 2 Topic"
-                    >
-                        <n-input
-                            type="textarea"
-                            :status="topicStatus"
-                            :disabled="isInputsDisabled"
-                            v-model:value="newEssayStore.ieltsTopic"
-                            :autosize="{
-                                minRows: 3,
-                                maxRows: 20
-                            }"
-                        />
-                    </n-form-item-row>
-                    <n-form-item-row label="Content">
-                        <n-space vertical style="width: 100%">
-                            <n-spin :show="spinStore.isSpining" size="large">
+                            <n-thing>
+                                <template #header>
+                                    <div style="margin-bottom: 0">Requirement</div>
+                                </template>
+                                <template #description> {{ requirementTitle }} </template>
+                            </n-thing>
+                            <template #suffix>
+                                <n-icon size="24"><ChevronRight16Regular /></n-icon>
+                            </template>
+                        </n-list-item>
+                        <n-list-item @click="handleStudentClick">
+                            <template #prefix>
+                                <n-icon size="24"><Person16Regular /></n-icon>
+                            </template>
+                            <n-thing title="Student">
+                                <template #description> {{ studentName }} </template>
+                            </n-thing>
+                            <template #suffix>
+                                <n-icon size="24"><ChevronRight16Regular /></n-icon>
+                            </template>
+                        </n-list-item>
+                    </n-list>
+
+                    <n-form style="margin-top: 1em">
+                        <n-form-item-row label="Title">
+                            <n-input clearable :disabled="isInputsDisabled" v-model:value="newEssayStore.title" />
+                        </n-form-item-row>
+                        <n-form-item-row
+                            v-if="newEssayStore.requirementTitle === 'IELTS Writing Task 2 Grading Criteria'"
+                            label="IELTS Writing Task 2 Topic"
+                        >
+                            <n-input
+                                type="textarea"
+                                :status="topicStatus"
+                                :disabled="isInputsDisabled"
+                                v-model:value="newEssayStore.ieltsTopic"
+                                :autosize="{
+                                    minRows: 3,
+                                    maxRows: 20
+                                }"
+                            />
+                        </n-form-item-row>
+                        <n-form-item-row label="Content">
+                            <n-space vertical style="width: 100%">
                                 <n-input
                                     type="textarea"
                                     :status="essayStatus"
@@ -65,41 +80,41 @@
                                         maxRows: 20
                                     }"
                                 />
-                            </n-spin>
-                            <n-space justify="space-between">
-                                <n-button-group>
-                                    <n-button ghost>
+                                <n-space justify="space-between">
+                                    <n-button-group>
+                                        <n-button ghost>
+                                            <template #icon>
+                                                <n-icon><Camera16Regular /></n-icon>
+                                            </template>
+                                        </n-button>
+                                        <n-button ghost>
+                                            <template #icon>
+                                                <n-icon><Image16Regular /></n-icon>
+                                            </template>
+                                        </n-button>
+                                        <n-button @click="handleFileButtonClick">
+                                            <template #icon>
+                                                <n-icon><FolderAdd16Regular /></n-icon>
+                                            </template>
+                                        </n-button>
+                                    </n-button-group>
+                                    <n-button :secondary="!confirmingDelete" type="error" @click="newEssayStore.content = ''">
                                         <template #icon>
-                                            <n-icon><Camera16Regular /></n-icon>
+                                            <n-icon><Delete16Regular /></n-icon>
                                         </template>
                                     </n-button>
-                                    <n-button ghost>
-                                        <template #icon>
-                                            <n-icon><Image16Regular /></n-icon>
-                                        </template>
-                                    </n-button>
-                                    <n-button @click="handleFileButtonClick">
-                                        <template #icon>
-                                            <n-icon><FolderAdd16Regular /></n-icon>
-                                        </template>
-                                    </n-button>
-                                </n-button-group>
-                                <n-button :secondary="!confirmingDelete" type="error" @click="newEssayStore.content = ''">
-                                    <template #icon>
-                                        <n-icon><Delete16Regular /></n-icon>
-                                    </template>
-                                </n-button>
+                                </n-space>
                             </n-space>
-                        </n-space>
-                    </n-form-item-row>
-                    <input type="file" accept=".txt" ref="fileInput" style="display: none" @change="handleFileChange" />
-                </n-form>
-                <div class="button-container">
-                    <n-button class="button" type="error" block secondary strong @click="clearAll"> Clear All </n-button>
-                    <n-button class="button" type="primary" block secondary strong @click="submitEssay"> Submit </n-button>
-                </div>
-            </n-space>
-            <template #description> {{ spinStore.spinText }} </template>
+                        </n-form-item-row>
+                        <input type="file" accept=".txt" ref="fileInput" style="display: none" @change="handleFileChange" />
+                    </n-form>
+                    <div class="button-container">
+                        <n-button class="button" type="error" block secondary strong @click="clearAll"> Clear All </n-button>
+                        <n-button class="button" type="primary" block secondary strong @click="submitEssay"> Submit </n-button>
+                    </div>
+                </n-space>
+                <template #description> {{ spinStore.spinText }} </template>
+            </n-spin>
         </ion-content>
     </ion-page>
 </template>
@@ -115,7 +130,8 @@ import {
     Camera16Regular,
     Image16Regular,
     FolderAdd16Regular,
-    Delete16Regular
+    Delete16Regular,
+    Question20Regular
 } from '@vicons/fluent';
 
 const newEssayStore = useNewEssayStore();
@@ -135,10 +151,16 @@ const studentName = computed(() => {
 const confirmingDelete = ref(false);
 
 function handleRequirementClick() {
+    if (spinStore.isSpining) {
+        return;
+    }
     router.push('/ai/requirement');
 }
 
 function handleStudentClick() {
+    if (spinStore.isSpining) {
+        return;
+    }
     router.push('/ai/student');
 }
 
@@ -188,8 +210,8 @@ function submitEssay() {
         message.error('Please enter the content of the essay');
         essayStatus.value = 'error';
         errorFlag = true;
-    } else if (newEssayStore.content.length > 2000) {
-        message.error('The content of the essay should be less than 2000 characters');
+    } else if (newEssayStore.content.length > 5000) {
+        message.error('The content of the essay should be less than 5000 characters');
         essayStatus.value = 'error';
         errorFlag = true;
     }
@@ -217,13 +239,26 @@ function submitEssay() {
 
     const feedbackStore = useFeedbackStore();
 
-    openaiRequest(
-        newEssayStore.requirementContent,
-        newEssayStore.content,
-        newEssayStore.ieltsTopic,
-        newEssayStore.studentName,
-        newEssayStore.studentCustomInfo
-    )
+    Promise.race([
+        openaiRequest(
+            newEssayStore.requirementContent,
+            newEssayStore.content,
+            newEssayStore.ieltsTopic,
+            newEssayStore.studentName,
+            newEssayStore.studentCustomInfo
+        ),
+        new Promise((_, reject) =>
+            setTimeout(
+                () =>
+                    reject(() => {
+                        message.error('Something went wrong, please try again later');
+                        isInputsDisabled.value = false;
+                        spinStore.isSpining = false;
+                    }),
+                30000
+            )
+        )
+    ])
         .then((response) => {
             if (response) {
                 spinStore.isSpining = false;
@@ -231,7 +266,7 @@ function submitEssay() {
                 newEssayStore.submitTime = new Date().toLocaleString('en-HK').toUpperCase();
 
                 // response is a string of JSON
-                feedbackStore.setFeedback(JSON.parse(response), newEssayStore.requirementTitle === 'IELTS Writing Task 2 Grading Criteria');
+                feedbackStore.setFeedback(JSON.parse(response as string), newEssayStore.requirementTitle === 'IELTS Writing Task 2 Grading Criteria');
                 router.push('/ai/results');
             }
         })
@@ -252,7 +287,7 @@ function submitEssay() {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-top: 5em;
+    margin-top: 3em;
     margin-bottom: 5em;
 }
 
@@ -287,5 +322,9 @@ ion-fab-button {
 }
 .n-thing-header {
     margin-bottom: 0 !important;
+}
+
+.tip-text {
+    margin: 0;
 }
 </style>

@@ -416,6 +416,10 @@ function onSavingFeedback() {
     if (studentsStore.currentEssay.feedback) {
         studentsStore.currentEssay.feedback.comment = tempComment.value as string;
     }
+
+    if (!studentsStore.currentEssay.ieltsTopic && studentsStore.currentEssay.feedback) {
+        (studentsStore.currentEssay.feedback as Feedback).grade = tempFeedback.value.grade;
+    }
     router.back();
 }
 </script>
