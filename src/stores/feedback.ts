@@ -30,6 +30,15 @@ export const useFeedbackStore = defineStore('feedback', () => {
     const ieltsOverallScore = computed(() => {
         let score = ieltsFeedback.value.TR + ieltsFeedback.value.CC + ieltsFeedback.value.LR + ieltsFeedback.value.GRA;
         score /= 4;
+
+        if (score % 1 >= 0.75) {
+            score = Math.ceil(score);
+        } else if (score % 1 >= 0.25) {
+            score = Math.floor(score) + 0.5;
+        } else {
+            score = Math.floor(score);
+        }
+    
         return score;
     });
 

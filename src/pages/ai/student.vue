@@ -100,7 +100,7 @@ function onSearchInputUpdate(value: string) {
 function handleStudentClick(student: Student) {
     newEssayStore.studentId = student.id;
     newEssayStore.studentName = student.name;
-
+    newEssayStore.studentCustomInfo = student.customInfo;
     router.back();
 }
 </script>

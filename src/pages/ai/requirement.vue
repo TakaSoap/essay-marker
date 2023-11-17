@@ -85,7 +85,12 @@ function goBack() {
 }
 
 const selectedRequirementTitle = computed(() => {
-    return newEssayStore.requirementTitle;
+    if(newEssayStore.requirementTitle === '') {
+        return null;
+    }
+    else {
+        return newEssayStore.requirementTitle;
+    }
 });
 </script>
 

@@ -1,20 +1,14 @@
 <template>
     <ion-page>
         <ion-content>
-            <n-tabs default-value="students" justify-content="space-evenly" type="line">
-                <n-tab-pane style="padding-top: 6px" name="students" tab="Students">
+            <n-tabs default-value="students" v-model:value="currentTab" justify-content="space-evenly" type="line">
+                <n-tab-pane style="padding-top: 6px" :disabled="isEditMode && currentTab != 'students'" name="students" tab="Students">
                     <n-space vertical>
                         <div style="padding: 0px 6px">
                             <n-grid x-gap="6" cols="14">
                                 <n-gi span="2">
-                                    <n-button
-                                        block
-                                        style="padding: 0"
-                                        quaternary
-                                        :type="!isStudentsEditMode ? 'primary' : 'error'"
-                                        @click="toggleEditMode"
-                                    >
-                                        {{ isStudentsEditMode ? 'Done' : 'Edit' }}
+                                    <n-button block style="padding: 0" quaternary :type="!isEditMode ? 'primary' : 'error'" @click="toggleEditMode">
+                                        {{ isEditMode ? 'Done' : 'Edit' }}
                                     </n-button>
                                 </n-gi>
                                 <n-gi span="10">
@@ -32,8 +26,8 @@
 
                         <n-list hoverable clickable>
                             <n-checkbox-group v-model:value="checkedStudents">
-                                <n-collapse-transition :show="isStudentsEditMode">
-                                    <n-list-item v-if="isStudentsEditMode" @click="showAddStudentForm">
+                                <n-collapse-transition :show="isEditMode">
+                                    <n-list-item v-if="isEditMode" @click="toggleAddStudentForm">
                                         <template style="margin: 0" #prefix>
                                             <n-icon size="34"><Add16Regular /></n-icon>
                                         </template>
@@ -45,7 +39,7 @@
                                     </n-list-item>
                                     <div class="n-list-item__divider"></div>
                                 </n-collapse-transition>
-                                <n-list-item v-for="student in searchedOptions" @click="handleStudentClick(student)">
+                                <n-list-item v-for="student in searchedStudentOptions" @click="handleStudentClick(student)">
                                     <template #prefix>
                                         <n-avatar round size="medium" :src="avatarPlaceholder + student.id" />
                                     </template>
@@ -57,7 +51,7 @@
                                         </template>
                                     </n-thing>
                                     <template #suffix>
-                                        <n-icon size="24" v-if="!isStudentsEditMode">
+                                        <n-icon size="24" v-if="!isEditMode">
                                             <ChevronRight16Regular />
                                         </n-icon>
                                         <n-checkbox v-else :value="student.id" />
@@ -67,12 +61,60 @@
                         </n-list>
                     </n-space>
                 </n-tab-pane>
-                <n-tab-pane :disabled="isStudentsEditMode || isRequirementsEditMode" name="requirements" tab="Requirements"> </n-tab-pane>
+                <n-tab-pane style="padding-top: 6px" :disabled="isEditMode && currentTab != 'requirements'" name="requirements" tab="Requirements">
+                    <n-space vertical>
+                        <div style="padding: 0px 6px">
+                            <n-grid x-gap="6" cols="28">
+                                <n-gi span="4">
+                                    <n-button block style="padding: 0" quaternary :type="!isEditMode ? 'primary' : 'error'" @click="toggleEditMode">
+                                        {{ isEditMode ? 'Done' : 'Edit' }}
+                                    </n-button>
+                                </n-gi>
+                                <n-gi span="23">
+                                    <n-input round v-model:value="searchRequirementInput" placeholder="Search" @update:value="onSearchInputUpdate">
+                                        <template #prefix> <n-icon :component="Search16Regular" /> </template>
+                                    </n-input>
+                                </n-gi>
+                            </n-grid>
+                        </div>
+
+                        <n-list hoverable clickable>
+                            <n-checkbox-group v-model:value="checkedRequirements">
+                                <n-collapse-transition :show="isEditMode">
+                                    <n-list-item v-if="isEditMode" @click="toggleAddRequirementForm">
+                                        <template style="margin: 0" #prefix>
+                                            <n-icon size="34"><Add16Regular /></n-icon>
+                                        </template>
+                                        <n-thing>
+                                            <template #header>
+                                                <n-text type="primary">Add Requirement</n-text>
+                                            </template>
+                                        </n-thing>
+                                    </n-list-item>
+                                    <div class="n-list-item__divider"></div>
+                                </n-collapse-transition>
+                                <n-list-item v-for="requirement in searchedRequirementOptions" @click="handleRequirementClick(requirement)">
+                                    <n-thing>
+                                        <template #header>
+                                            <div>
+                                                {{ requirement.title }}
+                                            </div>
+                                        </template>
+                                    </n-thing>
+                                    <template v-if="isEditMode" #suffix>
+                                        <n-checkbox v-if="requirement.title !=='IELTS Writing Task 2 Grading Criteria'" :value="requirement.id" />
+                                        <n-text v-else italic depth="3">Preset</n-text>
+                                    </template>
+                                </n-list-item>
+                            </n-checkbox-group>
+                        </n-list>
+                    </n-space>
+                </n-tab-pane>
             </n-tabs>
         </ion-content>
-        <ion-footer v-if="isStudentsEditMode || isRequirementsEditMode">
+        <ion-footer v-if="isEditMode">
             <div style="margin: 6px">
-                <n-button block size="large" type="error" @click="deleteStudents">
+                <n-button block size="large" type="error" @click="deleteItems">
                     <template #icon>
                         <Delete16Regular />
                     </template>
@@ -81,7 +123,7 @@
             </div>
         </ion-footer>
 
-        <n-drawer v-model:show="isAddStudentShown" placement="bottom" :height="301">
+        <n-drawer v-model:show="isAddStudentShown" :on-after-leave="resetFormStatus" placement="bottom" :height="301">
             <n-drawer-content title="Add Student">
                 <n-space vertical size="large">
                     <n-input placeholder="Name" :status="nameStatus" clearable v-model:value="studentsStore.newStudent.name" />
@@ -91,15 +133,60 @@
                         placeholder="Custom Info"
                         :status="customInfoStatus"
                         type="textarea"
-                        clearable
                         v-model:value="studentsStore.newStudent.customInfo"
                     />
                     <n-grid x-gap="6" cols="2">
                         <n-gi>
-                            <n-button block secondary type="error">Cancel</n-button>
+                            <n-button block secondary type="error" @click="toggleAddStudentForm">Cancel</n-button>
                         </n-gi>
                         <n-gi>
                             <n-button block type="primary" @click="addStudent">Add</n-button>
+                        </n-gi>
+                    </n-grid>
+                </n-space>
+            </n-drawer-content>
+        </n-drawer>
+
+        <n-drawer v-model:show="isAddRequirementShown" :on-after-leave="resetFormStatus" placement="bottom" :height="635">
+            <n-drawer-content title="Add Requirement">
+                <n-space vertical size="large">
+                    <n-input placeholder="Title" :status="titleStatus" clearable v-model:value="requirementsStore.newRequirement.title" />
+                    <n-input
+                        placeholder="Content"
+                        :status="contentStatus"
+                        type="textarea"
+                        :rows="20"
+                        v-model:value="requirementsStore.newRequirement.content"
+                    />
+                    <n-grid x-gap="6" cols="2">
+                        <n-gi>
+                            <n-button block secondary type="error" @click="toggleAddRequirementForm">Cancel</n-button>
+                        </n-gi>
+                        <n-gi>
+                            <n-button block type="primary" @click="addRequirement">Add</n-button>
+                        </n-gi>
+                    </n-grid>
+                </n-space>
+            </n-drawer-content>
+        </n-drawer>
+
+        <n-drawer v-model:show="isEditRequirementShown" :on-after-leave="resetFormStatus" placement="bottom" :height="635" >
+            <n-drawer-content title="Edit Requirement">
+                <n-space vertical size="large">
+                    <n-input placeholder="Title" :disabled="tempRequirement.title === 'IELTS Writing Task 2 Grading Criteria'" :status="titleStatus" clearable v-model:value="tempRequirement.title" />
+                    <n-input
+                        placeholder="Content"
+                        :status="contentStatus"
+                        type="textarea"
+                        :rows="20"
+                        v-model:value="tempRequirement.content"
+                    />
+                    <n-grid x-gap="6" cols="2">
+                        <n-gi>
+                            <n-button block secondary type="error" @click="toggleEditRequirementForm">Cancel</n-button>
+                        </n-gi>
+                        <n-gi>
+                            <n-button block type="primary" @click="editRequirement">Confirm</n-button>
                         </n-gi>
                     </n-grid>
                 </n-space>
@@ -112,12 +199,17 @@
 import { ChevronRight16Regular, Search16Regular, PersonEdit20Regular, Checkmark16Regular, Add16Regular, Delete16Regular } from '@vicons/fluent';
 import { useMessage } from 'naive-ui';
 import type { Student } from '@/stores/students';
+import type { Requirement } from '@/stores/requirements';
 
 const avatarPlaceholder = 'https://i.pravatar.cc/100?u=';
 
 const studentsStore = useStudentsStore();
+const requirementsStore = useRequirementsStore();
+
 const router = useRouter();
 const message = useMessage();
+
+const currentTab = ref('students');
 
 const selectedGroupStudents = computed(() => {
     if (selectedGroup.value !== 'all') {
@@ -127,14 +219,20 @@ const selectedGroupStudents = computed(() => {
     }
 });
 
+const searchStudentInput = ref('');
 // searched based on selectedGroupStudents
-const searchedOptions = computed(() => {
+const searchedStudentOptions = computed(() => {
     return selectedGroupStudents.value.filter((student) => {
         return student.name.toLowerCase().includes(searchStudentInput.value.toLowerCase());
     });
 });
 
-const searchStudentInput = ref('');
+const searchRequirementInput = ref('');
+const searchedRequirementOptions = computed(() => {
+    return requirementsStore.requirements.filter((requirement) => {
+        return requirement.title.toLowerCase().includes(searchRequirementInput.value.toLowerCase());
+    });
+});
 
 const selectedGroup = ref('all');
 
@@ -165,7 +263,7 @@ function onSearchInputUpdate(value: string) {
 }
 
 function handleStudentClick(student: Student) {
-    if (isStudentsEditMode.value) {
+    if (isEditMode.value) {
         return;
     } else {
         studentsStore.currentStudent = student;
@@ -173,39 +271,65 @@ function handleStudentClick(student: Student) {
     }
 }
 
-const isStudentsEditMode = ref(false);
+let tempRequirement: Ref<Requirement>;
+let tempRequirementTitle = '';
+
+function handleRequirementClick(requirement: Requirement) {
+    if (isEditMode.value) {
+        return;
+    } else {
+        tempRequirement = ref({ ...requirement })
+        tempRequirementTitle = requirement.title;
+        toggleEditRequirementForm();
+    }
+}
+
+const isEditMode = ref(false);
 const checkedStudents = ref([]);
+const checkedRequirements = ref([]);
 
 function toggleEditMode() {
-    isStudentsEditMode.value = !isStudentsEditMode.value;
+    isEditMode.value = !isEditMode.value;
     checkedStudents.value = [];
-    resetNewStudentFormStatus();
+    resetFormStatus();
     studentsStore.resetNewStudent();
 }
 
 // If router to other pages disable edit mode
 watch(router.currentRoute, () => {
-    isStudentsEditMode.value = false;
+    isEditMode.value = false;
 });
 
-const isRequirementsEditMode = ref(false);
-
 const isAddStudentShown = ref(false);
+const isAddRequirementShown = ref(false);
+const isEditRequirementShown = ref(false);
 
 const newStudentGroup: Ref<string | null> = ref(null);
 
 const nameStatus = ref('');
 const groupStatus = ref('');
 const customInfoStatus = ref('');
+const titleStatus = ref('');
+const contentStatus = ref('');
 
-function resetNewStudentFormStatus() {
+function resetFormStatus() {
     nameStatus.value = '';
     groupStatus.value = '';
     customInfoStatus.value = '';
+    titleStatus.value = '';
+    contentStatus.value = '';
 }
 
-function showAddStudentForm() {
-    isAddStudentShown.value = true;
+function toggleAddStudentForm() {
+    isAddStudentShown.value = !isAddStudentShown.value;
+}
+
+function toggleAddRequirementForm() {
+    isAddRequirementShown.value = !isAddRequirementShown.value;
+}
+
+function toggleEditRequirementForm() {
+    isEditRequirementShown.value = !isEditRequirementShown.value;
 }
 
 function addStudent() {
@@ -238,13 +362,68 @@ function addStudent() {
 
     studentsStore.addStudent(studentsStore.newStudent);
     isAddStudentShown.value = false;
-    resetNewStudentFormStatus();
+    resetFormStatus();
     newStudentGroup.value = null;
 }
 
-function deleteStudents() {
-    studentsStore.deleteStudents(checkedStudents.value);
+function addRequirement() {
+    // All fields are mandatory
+    if (requirementsStore.newRequirement.title === '') {
+        message.error('Please enter the title of the requirement');
+        titleStatus.value = 'error';
+        return;
+    }
+
+    if (requirementsStore.requirements.some((requirement) => requirement.title === requirementsStore.newRequirement.title)) {
+        message.error('The title of the requirement already exists');
+        nameStatus.value = 'error';
+        return;
+    }
+
+    if (requirementsStore.newRequirement.content === '') {
+        message.error('Please enter the content of the requirement');
+        contentStatus.value = 'error';
+        return;
+    }
+
+    requirementsStore.addRequirement(requirementsStore.newRequirement);
+    isAddRequirementShown.value = false;
+    resetFormStatus();
 }
+
+function editRequirement(requirement: Requirement) {
+    // All fields are mandatory
+    if (tempRequirement.value.title === '') {
+        message.error('Please enter the title of the requirement');
+        titleStatus.value = 'error';
+        return;
+    }
+
+    if (tempRequirement.value.title !== tempRequirementTitle && requirementsStore.requirements.some((requirement) => requirement.title === tempRequirement.value.title)) {
+        message.error('The title of the requirement already exists');
+        nameStatus.value = 'error';
+        return;
+    }
+
+    if (tempRequirement.value.content === '') {
+        message.error('Please enter the content of the requirement');
+        contentStatus.value = 'error';
+        return;
+    }
+
+    requirementsStore.editRequirement(tempRequirement.value);
+    isEditRequirementShown.value = false;
+    resetFormStatus();
+}
+
+function deleteItems() {
+    if (currentTab.value === 'requirements') {
+        requirementsStore.deleteRequirements(checkedRequirements.value);
+    } else if (currentTab.value === 'students') {
+        studentsStore.deleteStudents(checkedStudents.value);
+    }
+}
+
 </script>
 
 <style>

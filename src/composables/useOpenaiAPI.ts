@@ -37,36 +37,46 @@ Now, follow the upcoming instructions to grade the essay.
 `;
 const userMessagePrompt = (essay: string) => `
 essay content:
-${essay}
----
-Now, according to the scoring criteria, grade the essay above.
-`;
+${essay}`;
 const ieltsTopicPrompt = (topic: string) => `
 The topic of this essay is: ${topic}
 If the essay is off-topic, it should be given an extremely low score and you must mention it in the overall comment.`;
 
-async function openaiRequest(requirement: string, essay: string, ieltsTopic: string) {
+const personalInfoPrompt = (name: string, customInfo: string) => `
+---
+You will be grading ${name}'s essay, so please use a friendly tone. Below is a personal addtitonal info of ${name}, please consider the additional info in your comment. 
+${customInfo}
+In your comment, start with a friendly greeting.
+Now, according to the scoring criteria and the personal info, grade the essay above.
+`;
+
+async function openaiRequest(requirement: string, essay: string, ieltsTopic: string, name: string, customInfo: string) {
     let systemPrompt;
     let contentPrompt;
 
     if (ieltsTopic != '') {
-        systemPrompt = openingPrompt + requirement + ieltsJsonFormatPrompt;
+        systemPrompt = openingPrompt + personalInfoPrompt(name, customInfo) + requirement + ieltsJsonFormatPrompt;
         contentPrompt = userMessagePrompt(essay) + ieltsTopicPrompt(ieltsTopic);
     } else {
-        systemPrompt = openingPrompt + requirement + jsonFormatPrompt;
+        systemPrompt = openingPrompt + personalInfoPrompt(name, customInfo) + requirement + jsonFormatPrompt;
         contentPrompt = userMessagePrompt(essay);
     }
 
-    const completion = await openai.chat.completions.create({
-        messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: contentPrompt }
-        ],
-        model: 'gpt-3.5-turbo-1106',
-        response_format: { type: 'json_object' }
-    });
-    console.log(completion.choices[0].message.content);
-    return completion.choices[0].message.content;
+    try {
+        const completion = await openai.chat.completions.create({
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: contentPrompt }
+            ],
+            model: 'gpt-3.5-turbo-1106',
+            response_format: { type: 'json_object' }
+        });
+
+        console.log(completion.choices[0].message.content);
+        return completion.choices[0].message.content;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 export default openaiRequest;

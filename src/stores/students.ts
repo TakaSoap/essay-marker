@@ -51,6 +51,18 @@ export const useStudentsStore = defineStore('students', () => {
                         grade: 'A',
                         comment: `This essay effectively conveys the emotions of the author in a descriptive and heartfelt manner. The use of vivid imagery, such as 'my eyes got all swimmy like there were fishies in them too' and 'Goldie's shiny scales', enhances the reader's understanding of the sadness experienced. The personal connection with Goldie is well articulated, creating a strong emotional impact. Additionally, the essay demonstrates a clear understanding of narrative structure and effectively communicates the sequence of events. Overall, a well-written and emotionally resonant piece.`
                     }
+                },
+                {
+                    id: 3,
+                    title: 'A Little Trip',
+                    content: `Last weekend, my family went on a little trip to the countryside. It was an exciting adventure because I love nature. We packed a picnic with my favorite sandwiches and fruit juice. The drive was fun, and we sang songs together. When we arrived, we spread a blanket under a big oak tree. The grass was green and soft. We saw butterflies and birds singing. I ran around playing with my little brother, and we found shiny pebbles by the stream. It was peaceful and beautiful. I wish every day could be like our little trip. I can't wait for the next one!`,
+                    ieltsTopic: undefined,
+                    submitTime: '2023-11-16 21:00:00',
+                    requirementTitle: 'Grading Criteria for Secondary First-Grader Essays',
+                    feedback: {
+                        grade: 'A',
+                        comment: `Hi John! It sounds like you had a fantastic time on your countryside trip! I really enjoyed reading about your adventurous weekend. Your essay shines with the joy and excitement you felt during the trip. Your vivid descriptions of the nature, like the green grass, butterflies, and birds, painted a beautiful picture in my mind. You also did a great job of expressing your love for nature. To make your essay even better, try adding more details about your favorite part of the trip and how it made you feel. This will make your writing even more engaging and help the reader experience your adventure with you. Keep up the great work, John! Your enthusiasm for nature really shines through your writing. I look forward to reading more of your adventures in the future!`
+                    }
                 }
             ]
         },
@@ -149,20 +161,20 @@ export const useStudentsStore = defineStore('students', () => {
         };
     }
 
-    function addEssay(student: Student, essay: Essay) {
-        essay.id = student.essays.length + 1;
-        const index = students.value.findIndex((s) => s.id === student.id);
+    function addEssay(studentId: number, essay: Essay) {
+        const index = students.value.findIndex((s) => s.id === studentId);
+        essay.id = students.value[index].essays.length + 1;
         students.value[index].essays.push(essay);
     }
 
-    function editEssay(student: Student, essay: Essay) {
-        const index = students.value.findIndex((s) => s.id === student.id);
+    function editEssay(studentId: number, essay: Essay) {
+        const index = students.value.findIndex((s) => s.id === studentId);
         const essayIndex = students.value[index].essays.findIndex((e) => e.id === essay.id);
         students.value[index].essays[essayIndex] = essay;
     }
 
-    function deleteEssay(student: Student, essay: Essay) {
-        const index = students.value.findIndex((s) => s.id === student.id);
+    function deleteEssay(studentId: number, essay: Essay) {
+        const index = students.value.findIndex((s) => s.id === studentId);
         const essayIndex = students.value[index].essays.findIndex((e) => e.id === essay.id);
         students.value[index].essays.splice(essayIndex, 1);
     }

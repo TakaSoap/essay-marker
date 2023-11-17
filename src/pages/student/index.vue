@@ -139,8 +139,10 @@ import { DocumentOnePage20Regular, ChevronRight16Regular, PersonEdit20Regular, C
 import { useMessage } from 'naive-ui';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/en-gb';
 
 dayjs.extend(relativeTime);
+dayjs.locale('en-gb');
 const router = useRouter();
 const message = useMessage();
 const isLoading = ref(false);

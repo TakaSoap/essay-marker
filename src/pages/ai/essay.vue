@@ -19,9 +19,6 @@
             <n-p style="font-size: medium;" v-for="(line, index) in essayLines" :key="index">
                 {{ line }}
             </n-p>
-            <n-p style="font-size: medium;" v-for="i in 10">
-                {{ newEssayStore.content }}
-            </n-p>
         </ion-content>
     </ion-page>
 </template>

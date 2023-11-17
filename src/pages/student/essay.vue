@@ -75,7 +75,7 @@ function toMarking() {
 }
 
 function deleteEssay() {
-    studentsStore.deleteEssay(studentsStore.currentStudent, studentsStore.currentEssay);
+    studentsStore.deleteEssay(studentsStore.currentStudent.id, studentsStore.currentEssay);
     router.back();
 }
 </script>

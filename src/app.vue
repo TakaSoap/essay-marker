@@ -10,7 +10,7 @@
                 <n-message-provider>
                     <n-notification-provider>
                         <n-dialog-provider>
-                                <ion-router-outlet />
+                            <ion-router-outlet />
                         </n-dialog-provider>
                     </n-notification-provider>
                 </n-message-provider>
@@ -31,13 +31,29 @@ const spinStore = useSpinStore();
  * @type import('naive-ui').GlobalThemeOverrides
  */
 const lightThemeOverrides = {
-    Layout: {}
-    // ...
+  "common": {
+    "infoColor": "#18A058FF",
+    "infoColorHover": "#36AD6AFF",
+    "infoColorPressed": "#0C7A43FF",
+    "infoColorSuppl": "#36AD6AFF",
+    "primaryColor": "#2080F0FF",
+    "primaryColorHover": "#4098FCFF",
+    "primaryColorPressed": "#1060C9FF",
+    "primaryColorSuppl": "#4098FCFF"
+  }
 };
 
 const darkThemeOverrides = {
-    Layout: {}
-    // ...
+    "common": {
+    "infoColor": "#63E2B7FF",
+    "infoColorHover": "#7FE7C4FF",
+    "infoColorPressed": "#5ACEA7FF",
+    "infoColorSuppl": "#2A947DFF",
+    "primaryColor": "#70C0E8FF",
+    "primaryColorHover": "#8ACBECFF",
+    "primaryColorPressed": "#66AFD3FF",
+    "primaryColorSuppl": "#3889C5FF"
+  }
 };
 
 onMounted(() => {
@@ -49,6 +65,4 @@ onMounted(() => {
 .main-content {
     min-height: 80vh;
 }
-
-
 </style>

@@ -1,12 +1,9 @@
 import { defineStore } from 'pinia';
 
-interface Requirement {
+export interface Requirement {
+    id: number;
     title: string;
     content: string;
-}
-
-interface RequirementItem extends Requirement {
-    id: number;
 }
 
 export const defaultRequirement = `Please read the following essays carefully and evaluate them based on the provided criteria. Assign the essay a grade from A to F, where A signifies an excellent essay and F indicates a failing grade. Evaluate the essays considering the following aspects:
@@ -225,16 +222,16 @@ Throughout your assessment, maintain a tone of respect and professionalism, ackn
 
 export const useRequirementsStore = defineStore('requirements', () => {
 
-    const requirements: Ref<RequirementItem[]> = ref([
+    const requirements: Ref<Requirement[]> = ref([
         {
             id: 1,
-            title: 'Default Grading Criteria',
-            content: defaultRequirement
+            title: 'IELTS Writing Task 2 Grading Criteria',
+            content: ieltsRequirement
         },
         {
             id: 2,
-            title: 'IELTS Writing Task 2 Grading Criteria',
-            content: ieltsRequirement
+            title: 'Default Grading Criteria',
+            content: defaultRequirement
         },
         {
             id: 3,
@@ -250,33 +247,35 @@ export const useRequirementsStore = defineStore('requirements', () => {
     ]);
 
     const newRequirement: Ref<Requirement> = ref({
+        id: 0,
         title: '',
         content: ''
     });
 
     const currentEditingRequirement = ref<Requirement>({
+        id: 2,
         title: 'Default Grading Criteria',
         content: defaultRequirement
     });
 
     function addRequirement(requirement: Requirement) {
-        requirements.value.push({
-            id: requirements.value.length + 1,
-            ...requirement
-        });
-    }
-
-    function editRequirement(requirement: Requirement, id: number) {
-        const index = requirements.value.findIndex(item => item.id === id);
-        requirements.value[index] = {
-            id,
-            ...requirement
+        requirement.id = requirements.value.length + 1;
+        requirements.value.push(requirement);
+        // reset newRequirement
+        newRequirement.value = {
+            id: 0,
+            title: '',
+            content: ''
         };
     }
 
-    function deleteRequirement(id: number) {
-        const index = requirements.value.findIndex(item => item.id === id);
-        requirements.value.splice(index, 1);
+    function editRequirement(requirement: Requirement) {
+        const index = requirements.value.findIndex(item => item.id === requirement.id);
+        requirements.value[index] = requirement;
+    }
+
+    function deleteRequirements(ids: number[]) {
+        requirements.value = requirements.value.filter(item => !ids.includes(item.id));
     }
 
     return {
@@ -285,6 +284,6 @@ export const useRequirementsStore = defineStore('requirements', () => {
         currentEditingRequirement,
         addRequirement,
         editRequirement,
-        deleteRequirement
+        deleteRequirements
     };
 });
